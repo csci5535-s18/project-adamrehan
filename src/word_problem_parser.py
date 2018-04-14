@@ -30,7 +30,8 @@ def get_parent_verb(token):
 def extract_commands(parsed_text):
     for token in parsed_text:
         if is_quantifier(token):
-            print(get_parent_verb(token).text)
+            verb = get_parent_verb(token)
+            print(verb.text, [c.text for c in verb.children])
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser("Word Problem Parser")
@@ -41,5 +42,15 @@ if __name__=='__main__':
 
     parsed_text = nlp(u'%s' % text)
 
-    
+    """
+    Basic idea:
+
+    Find a quantifier, and then find its closest parent that is
+    a verb.
+    Now, using a similarity metric, map that verb to some command
+    The denotational semantics of that command should give us a sort of
+    'template'. From here, we can fill that command template
+    with args from the Verbs dependency tree. Will this scale
+    to large expressions?
+    """
     extract_commands(parsed_text)
