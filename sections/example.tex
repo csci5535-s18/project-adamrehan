@@ -1,0 +1,20 @@
+\section{Example}
+\begin{problem}
+	Pooja has 3 apples. She eats one apple. How many apples does Pooja have now?
+\end{problem}
+We attempt to translate the sample problem's text into the following commands:
+\[\begin{array}{lrcllL}
+\textit{Pooja has 3 apples} & -> & \setc{a_p}{3}
+\\
+\textit{She eats one apple} & -> & \setc{a_p}{a_p - 1}
+\\
+\textit{How many apples does Pooja have now?} & -> & \printc{a_p}
+\end{array}\]
+And since these are sequence of steps we end up with:
+\[
+	\seqc{\setc{a_p}{3}}{\seqc{\setc{a_p}{\minusc{a_p}{1}}}{\printc{a_p}}}
+\]
+More formally:
+\[
+\seqa{\seta{a_p}{3}}{\seqa{\seta{a_p}{\minusa{a_p}{1}}}{\printa{a_p}}}
+\]

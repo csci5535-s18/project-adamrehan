@@ -1,0 +1,114 @@
+\section{Language: \IMP}
+%\begin{mathpar}
+%	\inferrule[ ]{ }{
+%		\isFloat{e}
+%	}
+%\end{mathpar}\\
+
+\fbox{\inferrule{}{\isVal{e}}}\\
+
+\fbox{\inferrule{}{\hasType{e}{\tau}}}\\
+
+\begin{mathpar}
+	\inferrule[ ]{ }
+    {
+		\isFloat{\addra{\addr}}
+	}
+    
+    \inferrule[ ]{ }
+    {
+		\isFloat{\floata{f}}
+	}
+    
+    \inferrule[ ]{\isFloat{e_1} \\ 
+    \isFloat{e_2}}
+    {
+		\isFloat{\plusa{e_1}{e_2}}
+	}
+    
+    \inferrule[ ]{\isFloat{e_1} \ 
+    \isFloat{e_2}}
+    {
+		\isFloat{\minusa{e_1}{e_2}}
+	}
+    
+    \inferrule[ ]{\isFloat{e_1} \ 
+    \isFloat{e_2}}
+    {
+		\isFloat{\timesa{e_1}{e_2}}
+	}
+    
+    \inferrule[ ]{\isFloat{e_1} \ 
+    \isFloat{e_2}}
+    {
+		\isFloat{\dividea{e_1}{e_2}}
+	}
+\end{mathpar}\\
+
+\fbox{\inferrule{}{c: ok}} \\\\
+
+\begin{mathpar} 
+	\inferrule[]{
+    	\isFloat{e}
+    }{
+		\isOk{\seta{\addr}{e}}
+    }
+
+	\inferrule[]{ }{
+		\isOk{\skipa}
+	}
+
+ 	\inferrule[]{
+ 		\isOk{c_1} \ \ \isOk{c_2}
+   	}{
+		\isOk{\seqa{c_1}{c_2}}
+	}
+	
+	\inferrule[]{
+		\isFloat{e}
+	}{
+	\isOk{\printa{e}}
+	}
+
+
+\end{mathpar}
+\hspace{6cm}Syntax chart:
+\[\begin{array}{lrcllL}
+\Typ & \typ & ::= & \numtyp & \numtyp & numbers
+\\
+&&& \booltyp & \booltyp & booleans
+\\
+\Expr & \expr & ::= & \addra{\addr} & \addr & addresses (or ``assignables'') 
+\\ 
+&&& \numa{\num} & \num & numeral
+\\
+&&& \boola{\bool} & \bool & boolean
+\\
+&&& \plusa{\expr_1}{\expr_2} & \plusc{\expr_1}{\expr_2} & addition
+\\
+&&& \timesa{\expr_1}{\expr_2} & \timesc{\expr_1}{\expr_2} & multiplication
+\\
+&&& \eqa{\expr_1}{\expr_2} & \eqc{\expr_1}{\expr_2} & equal
+\\
+&&& \lea{\expr_1}{\expr_2} & \lec{\expr_1}{\expr_2} & less-than-or-equal
+\\
+&&& \nota{\expr_1} & \notc{\expr_1} & negation
+\\
+&&& \anda{\expr_1}{\expr_2} & \andc{\expr_1}{\expr_2} & conjunction
+\\
+&&& \ora{\expr_1}{\expr_2} & \orc{\expr_1}{\expr_2} & disjunction
+\\
+\Cmd & \cmd & ::= & \seta{\addr}{\expr} & \setc{\addr}{\expr} & assignment
+\\
+&&& \skipa & \skipa & skip
+\\
+&&& \seqa{\cmd_1}{\cmd_2} & \seqc{\cmd_1}{\cmd_2} & sequencing
+\\
+&&& \ifa{\expr}{\cmd_1}{\cmd_2} & \ifc{\expr}{\cmd_1}{\cmd_2} & conditional
+\\
+&&& \whilea{\expr}{\cmd_1} & \whilec{\expr}{\cmd_1} & looping
+\\
+&&& \printa{e} & \printc{e} & printing
+\\
+\Addr & \addr
+\end{array}\]
