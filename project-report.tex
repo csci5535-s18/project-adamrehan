@@ -7,7 +7,8 @@
 \usepackage{tabularx}
 \usepackage{amsmath}
 \usepackage{mathpartir} %% for inference rules
-
+\usepackage{import}
+\newcommand*{\sectiondir}{sections/}
 %% Listings
 \usepackage{listings}
 \lstdefinestyle{default}{%
@@ -119,147 +120,8 @@
 \pagestyle{plain}
 \begin{document}
 \maketitle
-\section{Abstract}
-In this project, we are proposing to solve algebraic word problems in a way similar to Kushman et al [cite Learning to Automatically Solve Algebra Word Problems]. However, rather than relying on a rule based approach [look at above paper for citations to rule based approaches], or a mapping function to a set of templates (as in Kushman et al), we are proposing a slightly different method. In this method, we will learn a mapping from the input sequence of words, to a set of triples of potential expressions, via a dependency parse of the text. Then, rather than mapping each entity or verb in the text to a template, we will map each element in the triple to a type in our language, based on a probabilistic model.
 
-Finally, our programming language will be implemented to solve the expressions provided by our NLP model, based on a simple operational semantics we have created for solving such problems. The target language will be the simple \IMP language.\\\\
-
-\section{Example}
-\begin{problem}
-	Pooja has 3 apples. She eats one apple. How many apples does Pooja have now?
-\end{problem}
-We attempt to translate the sample problem's text into the following commands:
-
-\[\begin{array}{lrcllL}
-\textit{Pooja has 3 apples} & -> & \setc{a_p}{3}
-\\
-\textit{She eats one apple} & -> & \setc{a_p}{a_p - 1}
-\\
-\textit{How many apples does Pooja have now?} & -> & \printc{a_p}
-\end{array}\]
-
-And since these are sequence of steps we end up with:
-\[
-	\seqc{\setc{a_p}{3}}{\seqc{\setc{a_p}{\minusc{a_p}{1}}}{\printc{a_p}}}
-\]
-
-More formally:
-\[
-\seqa{\seta{a_p}{3}}{\seqa{\seta{a_p}{\minusa{a_p}{1}}}{\printa{a_p}}}
-\]
-
-\fbox{\inferrule{}{\isVal{e}}}\\
-
-\section{Language: \IMP}
-%\begin{mathpar}
-%	\inferrule[ ]{ }{
-%		\isFloat{e}
-%	}
-%\end{mathpar}\\
-
-\fbox{\inferrule{}{\hasType{e}{\tau}}}\\
-
-\begin{mathpar}
-	\inferrule[ ]{ }
-    {
-		\isFloat{\addra{\addr}}
-	}
-    
-    \inferrule[ ]{ }
-    {
-		\isFloat{\floata{f}}
-	}
-    
-    \inferrule[ ]{\isFloat{e_1} \\ 
-    \isFloat{e_2}}
-    {
-		\isFloat{\plusa{e_1}{e_2}}
-	}
-    
-    \inferrule[ ]{\isFloat{e_1} \ 
-    \isFloat{e_2}}
-    {
-		\isFloat{\minusa{e_1}{e_2}}
-	}
-    
-    \inferrule[ ]{\isFloat{e_1} \ 
-    \isFloat{e_2}}
-    {
-		\isFloat{\timesa{e_1}{e_2}}
-	}
-    
-    \inferrule[ ]{\isFloat{e_1} \ 
-    \isFloat{e_2}}
-    {
-		\isFloat{\dividea{e_1}{e_2}}
-	}
-\end{mathpar}\\
-
-\fbox{\inferrule{}{c: ok}} \\\\
-
-\begin{mathpar} 
-	\inferrule[]{
-    	\isFloat{e}
-    }{
-		\isOk{\seta{\addr}{e}}
-    }
-
-	\inferrule[]{ }{
-		\isOk{\skipa}
-	}
-
- 	\inferrule[]{
- 		\isOk{c_1} \ \ \isOk{c_2}
-   	}{
-		\isOk{\seqa{c_1}{c_2}}
-	}
-	
-	\inferrule[]{
-		\isFloat{e}
-	}{
-	\isOk{\printa{e}}
-	}
-
-
-\end{mathpar}
-\hspace{6cm}Syntax chart:
-\[\begin{array}{lrcllL}
-\Typ & \typ & ::= & \numtyp & \numtyp & numbers
-\\
-&&& \booltyp & \booltyp & booleans
-\\
-\Expr & \expr & ::= & \addra{\addr} & \addr & addresses (or ``assignables'') 
-\\ 
-&&& \numa{\num} & \num & numeral
-\\
-&&& \boola{\bool} & \bool & boolean
-\\
-&&& \plusa{\expr_1}{\expr_2} & \plusc{\expr_1}{\expr_2} & addition
-\\
-&&& \timesa{\expr_1}{\expr_2} & \timesc{\expr_1}{\expr_2} & multiplication
-\\
-&&& \eqa{\expr_1}{\expr_2} & \eqc{\expr_1}{\expr_2} & equal
-\\
-&&& \lea{\expr_1}{\expr_2} & \lec{\expr_1}{\expr_2} & less-than-or-equal
-\\
-&&& \nota{\expr_1} & \notc{\expr_1} & negation
-\\
-&&& \anda{\expr_1}{\expr_2} & \andc{\expr_1}{\expr_2} & conjunction
-\\
-&&& \ora{\expr_1}{\expr_2} & \orc{\expr_1}{\expr_2} & disjunction
-\\
-\Cmd & \cmd & ::= & \seta{\addr}{\expr} & \setc{\addr}{\expr} & assignment
-\\
-&&& \skipa & \skipa & skip
-\\
-&&& \seqa{\cmd_1}{\cmd_2} & \seqc{\cmd_1}{\cmd_2} & sequencing
-\\
-&&& \ifa{\expr}{\cmd_1}{\cmd_2} & \ifc{\expr}{\cmd_1}{\cmd_2} & conditional
-\\
-&&& \whilea{\expr}{\cmd_1} & \whilec{\expr}{\cmd_1} & looping
-\\
-&&& \printa{e} & \printc{e} & printing
-\\
-\Addr & \addr
-\end{array}\]
+\import{\sectiondir}{abstract.tex}
+\import{\sectiondir}{example.tex}
+\import{\sectiondir}{language.tex}
 \end{document}
