@@ -1,0 +1,34 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bojanowski et~al.(2016)Bojanowski, Grave, Joulin, and
+  Mikolov]{bojanowski2016enriching}
+Piotr Bojanowski, Edouard Grave, Armand Joulin, and Tomas Mikolov.
+\newblock Enriching word vectors with subword information.
+\newblock \emph{arXiv preprint arXiv:1607.04606}, 2016.
+
+\bibitem[Hosseini et~al.(2014)Hosseini, Hajishirzi, Etzioni, , and
+  Kushman]{Hosseini2014}
+M.~J. Hosseini, H.~Hajishirzi, O.~Etzioni, , and N.~Kushman.
+\newblock Learning to solve arithmetic word problems with verb categorization.
+\newblock In \emph{Empirical Methods in Natural Language Processing (EMNLP)},
+  pages 523--533, 2014.
+
+\bibitem[Kushman et~al.(2014)Kushman, Artzi, Zettlemoyer, and
+  Barzilay]{kushman2014}
+Nate Kushman, Yoav Artzi, Luke Zettlemoyer, and Regina Barzilay.
+\newblock Learning to automatically solve algebra word problems.
+\newblock In \emph{the Annual Meeting of the Association for Computational
+  Linguistics}, 2014.
+
+\bibitem[Mukherjee and Garain(2008)]{MukherjeeandGarain}
+Anirban Mukherjee and Utpal Garain.
+\newblock A review of methods for automatic understanding of natural language
+  mathematical problems.
+\newblock \emph{Artificial Intelligence Review}, 29, 2008.
+
+\end{thebibliography}
