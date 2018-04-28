@@ -158,8 +158,10 @@ class AlgebraNLP(object):
         for label, sentence in zip(labels, sentences):
             if label == sc.OBSERVATION:
                 commands.append([sc.OBSERVATION] + self.get_observation_arguments(sentence))
-            elif label == sc.CONS:
-                pass
+            elif label == sc.DESTROY:
+                commands.append([sc.DESTROY] + self.get_destroy_arguments(sentence))
+            elif labels == sc.GET:
+                commands.append([sc.GET] + self.get_get_arguments(sentence))
         return commands
 
 if __name__=='__main__':
