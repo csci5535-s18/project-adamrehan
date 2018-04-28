@@ -2,7 +2,7 @@
 We would like to generate code for different languages from our intermediary language
 For example to Language A-IMP, or python etc
 '''
-
+from sentence_classifier import OBSERVATION, CONS, DESTROY, GET, PTRANS
 def set(args):
     a = args[0]
     e = args[1]
@@ -29,20 +29,34 @@ def ptransfer(args):
         ]
     )
 
-OBS = 'observation'
-CONS = 'construct'
-PTRANS = 'p_transfer'
+def destroy(args):
+    a = args[0]
+    e = args[1]
+    return set([a, 'sub(get({a}); {e})'.format(a=a, e=e)])
+
+def construct(args):
+    a = args[0]
+    e = args[1]
+    return set([a, 'add(get({a}); {e})'.format(a=a, e=e)])
+
+def get(args):
+    a = args[0]
+    return 'get({})'.format(a)
+
 def do_raise():
     raise LookupError
 
 def match(command):
     c_type = command[0]
     args = command[1:]
-
-    if c_type == OBS:
+    if c_type == OBSERVATION:
         return set(args)
     elif c_type == PTRANS:
         return ptransfer(args)
+    elif c_type == DESTROY:
+        return destroy(args)
+    elif c_type == GET:
+        return get(args)
     else:
         return None
 
@@ -60,5 +74,5 @@ def generate_aimp(commands):
     return generate_seq(imp_commands)
 
 if __name__=='__main__':
-    commands  = [[OBS, 'a1', '3'], [OBS, 'a2', '5'], [PTRANS, 'a1', 'a2', 1]]
+    commands  = [[OBSERVATION, 'a', '3'], [DESTROY, 'a', '1'], [GET, 'a']]
     print generate_aimp(commands)

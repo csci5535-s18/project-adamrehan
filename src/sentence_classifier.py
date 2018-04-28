@@ -1,8 +1,14 @@
 import numpy as np
 import pickle
 
+OBSERVATION = 'observation'
+CONS = 'construct'
+DESTROY = 'destroy'
+PTRANS = 'p_transfer'
+GET = 'get'
+
 class VerbCategoryClassifier(object):
-    def __init__(self, classnames, verbs=None):
+    def __init__(self, classnames=None, verbs=None):
         self.classnames = classnames
         self.n_components = len(classnames)
         self.verbs = verbs
@@ -20,7 +26,12 @@ class VerbCategoryClassifier(object):
         pass
     def predict(self, X):
         pass
+    def predict_labels(self, sentences):
+        # Todo:
+        return [OBSERVATION, DESTROY, GET]
     def fit_predict(self, X):
         pass
     def load(self, filename):
-        return VerbCategoryClassifier(pickle.load(open(filename, 'rb')))
+        # TODO:
+        return VerbCategoryClassifier()
+        # return VerbCategoryClassifier(pickle.load(open(filename, 'rb')))
