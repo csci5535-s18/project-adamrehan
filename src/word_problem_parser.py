@@ -27,11 +27,18 @@ def get_parent_verb(token):
     
     return _get_parent_verb(token)
 
+def get_deps(t):
+    deps_list=[]
+    for c in t.children:
+        deps_list.append((c.text, c.dep_, get_deps(c)))
+
+    return deps_list
+        
 def extract_commands(parsed_text):
     for token in parsed_text:
         if is_quantifier(token):
             verb = get_parent_verb(token)
-            print(verb.text, [c.text for c in verb.children])
+            print(get_deps(verb))
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser("Word Problem Parser")
