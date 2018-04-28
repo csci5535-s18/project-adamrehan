@@ -12,7 +12,7 @@ def is_quantifier(token):
     NOT SURE THIS METHOD IS NEEDED, HERE IN CASE WE NEED TO EXTEND
     TO THINGS THAT ARE NOT DIGITS.
     """
-    return token.text.isdigit()
+    return token.like_num
 
 def get_parent_verb(token):
     """
