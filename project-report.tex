@@ -9,6 +9,8 @@
 \usepackage{mathpartir} %% for inference rules
 \usepackage{import}
 \newcommand*{\sectiondir}{sections/}
+\usepackage[round]{natbib}
+\usepackage{graphicx}
 %% Listings
 \usepackage{listings}
 \lstdefinestyle{default}{%
@@ -122,6 +124,12 @@
 \maketitle
 
 \import{\sectiondir}{abstract.tex}
+\import{\sectiondir}{architecture.tex}
 \import{\sectiondir}{example.tex}
 \import{\sectiondir}{language.tex}
+
+\newpage
+\bibliographystyle{plainnat}
+\bibliography{bibfile}
+
 \end{document}
