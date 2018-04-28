@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 class VerbCategoryClassifier(object):
     def __init__(self, classnames, verbs=None):
@@ -21,3 +22,5 @@ class VerbCategoryClassifier(object):
         pass
     def fit_predict(self, X):
         pass
+    def load(self, filename):
+        return VerbCategoryClassifier(pickle.load(open(filename, 'rb')))
