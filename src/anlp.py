@@ -14,12 +14,71 @@ class AlgebraNLP(object):
         tokens = self.nlp(sentence)
         quantifier = self._get_quantifier(tokens)
         V = self._get_parent_verb(quantifier)
+        nsubject_string = self._get_nsubject_string(V)        
         nobject_string = self._get_nobject_string(V)
-        nsubject_string = self._get_nsubject_string(V)
-
-        print(nobject_string, nsubject_string)
+        # Store quantifier as an integer
+        q_int = w2n.word_to_num(str(quantifier.text))
+        variable_name = nsubject_string + "_" + nobject_string
         
-        #w2n.word_to_num(quantifier.text)
+        self.variables_list.append(variable_name)
+
+        return [variable_name, q_int]
+
+    def get_construct_arguments(self, sentence):
+        """                                                                                                                                          
+        We assume a sentence is a single meaningful chunk of text,                                                                                    
+        with coreference resolution already done in preprocessing                                                                                     
+        """
+        tokens = self.nlp(sentence)
+        quantifier = self._get_quantifier(tokens)
+        V = self._get_parent_verb(quantifier)
+        nsubject_string = self._get_nsubject_string(V)
+        nobject_string = self._get_nobject_string(V)
+        # Store quantifier as an integer
+        q_int = w2n.word_to_num(str(quantifier.text))
+        variable_name = nsubject_string + "_" + nobject_string
+
+        self.variables_list.append(variable_name)
+
+        return [variable_name, q_int]
+
+    def get_destroy_arguments(self, sentence):
+        """                                                                                                                                           
+        We assume a sentence is a single meaningful chunk of text,                                                                                    
+        with coreference resolution already done in preprocessing                                                                                     
+        """
+        tokens = self.nlp(sentence)
+        quantifier = self._get_quantifier(tokens)
+        V = self._get_parent_verb(quantifier)
+        nsubject_string = self._get_nsubject_string(V)
+        nobject_string = self._get_nobject_string(V)
+        # Store quantifier as an integer                                                                                                              
+        q_int = w2n.word_to_num(str(quantifier.text))
+        variable_name = nsubject_string + "_" + nobject_string
+
+        self.variables_list.append(variable_name)
+
+        return [variable_name, q_int]
+
+    def get_negative_transfer_arguments(self, sentence):
+        """                                                                                                                                           
+        We assume a sentence is a single meaningful chunk of text,                                                                                    
+        with coreference resolution already done in preprocessing
+
+        negative transfer example: Pooja gives one apple to John
+        """
+        tokens = self.nlp(sentence)
+        quantifier = self._get_quantifier(tokens)
+        V = self._get_parent_verb(quantifier)
+        nsubject_string = self._get_nsubject_string(V)
+        nobject_string = self._get_nobject_string(V)
+        # Store quantifier as an integer                                                                                                       
+        q_int = w2n.word_to_num(str(quantifier.text))
+        variable_name = nsubject_string + "_" + nobject_string
+
+        self.variables_list.append(variable_name)
+
+        return [variable_name, q_int]
 
     def reset_variables_list(self):
         self.variables_list = []
