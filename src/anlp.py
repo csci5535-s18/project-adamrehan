@@ -1,5 +1,6 @@
 import spacy
 from word2number import w2n
+import sentence_classifier as sc
 
 class AlgebraNLP(object):
     def __init__(self):
@@ -91,6 +92,16 @@ class AlgebraNLP(object):
                 self._get_deps_strings(c, deps_list, constraints)
 
         return deps_list
+
+    def get_commands(self, sentences, labels):
+        commands = []
+        self.variables_list = []
+        for label, sentence in zip(labels, sentences):
+            if label == sc.OBSERVATION:
+                commands.append([sc.OBSERVATION] + self.get_observation_arguments(sentence))
+            elif label == sc.CONS:
+                pass
+        return commands
 
 if __name__=='__main__':
     # Test _get_deps_strings
