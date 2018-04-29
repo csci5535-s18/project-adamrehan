@@ -9,8 +9,8 @@ GET = 'get'
 
 class VerbCategoryClassifier(object):
     def __init__(self, classnames=None, verbs=None):
-        self.classnames = classnames
-        self.n_components = len(classnames)
+        # self.classnames = classnames
+        # self.n_components = len(classnames)
         self.verbs = verbs
     def vectorize(self, sentences):
         '''
@@ -31,7 +31,7 @@ class VerbCategoryClassifier(object):
         return [OBSERVATION, DESTROY, GET]
     def fit_predict(self, X):
         pass
-    def load(self, filename):
-        # TODO:
-        return VerbCategoryClassifier()
-        # return VerbCategoryClassifier(pickle.load(open(filename, 'rb')))
+def load(filename):
+    # TODO:
+    return VerbCategoryClassifier()
+    # return VerbCategoryClassifier(pickle.load(open(filename, 'rb')))

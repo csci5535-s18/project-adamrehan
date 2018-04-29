@@ -13,5 +13,5 @@ def prob2imp(text):
     print generate_aimp(commands)
 
 if __name__=='__main__':
-    prob = "Pooja has three apples. She eats one. How many apples does Pooja have now?"
+    prob = u'Pooja has three apples. She eats one. How many apples does Pooja have now?'
     a_code = prob2imp(prob)

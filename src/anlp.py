@@ -186,7 +186,7 @@ class AlgebraNLP(object):
                 commands.append([sc.OBSERVATION] + self.get_observation_arguments(sentence))
             elif label == sc.DESTROY:
                 commands.append([sc.DESTROY] + self.get_destroy_arguments(sentence))
-            elif labels == sc.GET:
+            elif label == sc.GET:
                 commands.append([sc.GET] + self.get_get_arguments(sentence))
         return commands
 
