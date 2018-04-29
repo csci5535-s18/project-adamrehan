@@ -35,7 +35,7 @@ def get_parent_verb(token):
 def get_deps(t):
     deps_list=[]
     for c in t.children:
-        deps_list.append((c.text, c.dep_, get_deps(c)))
+        deps_list.append((c.text, c.dep_, c.pos_, get_deps(c)))
 
     return deps_list
         

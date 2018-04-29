@@ -16,10 +16,10 @@ class AlgebraNLP(object):
         quantifier = self._get_quantifier(tokens)
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)        
-        nobject_string = self._get_nobject_string(V)
+        dobject_string = self._get_dobject_string(V)
         # Store quantifier as an integer
         q_int = w2n.word_to_num(str(quantifier.text))
-        variable_name = nsubject_string + "_" + nobject_string
+        variable_name = nsubject_string + "_" + dobject_string
         
         self.add_to_variables_list(variable_name)
 
@@ -34,10 +34,10 @@ class AlgebraNLP(object):
         quantifier = self._get_quantifier(tokens)
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)
-        nobject_string = self._get_nobject_string(V)
+        dobject_string = self._get_dobject_string(V)
         # Store quantifier as an integer
         q_int = w2n.word_to_num(str(quantifier.text))
-        variable_name = nsubject_string + "_" + nobject_string
+        variable_name = nsubject_string + "_" + dobject_string
 
         self.add_to_variables_list(variable_name)
 
@@ -52,10 +52,10 @@ class AlgebraNLP(object):
         quantifier = self._get_quantifier(tokens)
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)
-        nobject_string = self._get_nobject_string(V)
+        dobject_string = self._get_dobject_string(V)
         # Store quantifier as an integer
         q_int = w2n.word_to_num(str(quantifier.text))
-        variable_name = nsubject_string + "_" + nobject_string
+        variable_name = nsubject_string + "_" + dobject_string
 
         self.add_to_variables_list(variable_name)        
         
@@ -72,14 +72,17 @@ class AlgebraNLP(object):
         quantifier = self._get_quantifier(tokens)
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)
-        nobject_string = self._get_nobject_string(V)
+        dobject_string = self._get_dobject_string(V)
+        iobject_string = self._get_iobject_string(V)
+        
         # Store quantifier as an integer
         q_int = w2n.word_to_num(str(quantifier.text))
-        variable_name = nsubject_string + "_" + nobject_string
+        variable_names = [nsubject_string + "_" + dobject_string, iobject_string + "_" + dobject_string]
 
-        self.add_to_variables_list(variable_name)
+        for variable_name in variable_names:
+            self.add_to_variables_list(variable_name)
         
-        return [variable_name, q_int]
+        return [variable_names[0], variable_names[1], q_int]
 
     def get_get_arguments(self, sentence):
         """
@@ -91,10 +94,9 @@ class AlgebraNLP(object):
         quantifier = self._get_quantifier(tokens)
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)
-        nobject_string = self._get_nobject_string(V)
-        # Store quantifier as an integer
+        dobject_string = self._get_dobject_string(V)
 
-        variable_name = nsubject_string + "_" + nobject_string
+        variable_name = nsubject_string + "_" + dobject_string
 
         self.add_to_variables_list(variable_name)
         
@@ -103,7 +105,7 @@ class AlgebraNLP(object):
     def reset_variables_list(self):
         self.variables_list = []
 
-    def _get_nobject_string(self, V):
+    def _get_dobject_string(self, V):
         """
         Get the string that represents the part of the variable name
         correspodning to the object of the verb.
@@ -137,6 +139,31 @@ class AlgebraNLP(object):
                 mods += self._get_deps_strings(nsubj,\
                                                 [], modifier_deps)
         return "_".join([nsubj.lemma_.lower()] + [m.lemma_.lower() for m in mods])
+
+    def _get_iobject_string(self, V):
+        """
+        For ditransitive constructions, i.e. neg/pos transfer,
+        there should be either an indirect object, or some indirect
+        object like argument, oblique, nominal modifier, etc.
+        """
+        modifier_deps = ["amod", "nmod", "poss"]
+        mods = []
+        for c in V.children:
+            print(c, c.dep_, c.pos_)
+            if c.dep_ in ["dative", "iobj", "nmod", "obl"]:
+                # The above can get a handle on a PP whose child
+                # Is the noun phrase that we want.
+                if c.pos_ == "ADP":
+                    print([(cprime, cprime.dep_, cprime.pos_) for cprime in c.children])
+                    iobj = [cprime for cprime in c.children\
+                            if cprime.dep_ in ["pobj", "pcomp"]][0]
+                else:
+                    iobj = c
+                    
+                mods += self._get_deps_strings(iobj,\
+                                            [], modifier_deps)
+
+        return "_".join([iobj.lemma_.lower()] + [m.lemma_.lower() for m in mods])
         
     def _get_quantifier(self, tokens):
         """
@@ -197,6 +224,8 @@ class AlgebraNLP(object):
 if __name__=='__main__':
     # Test _get_deps_strings
     x = AlgebraNLP()
-    s = u"How many apples does Pooja have now?"
-
-    print(x.get_get_arguments(s))
+    s1 = u"Pooja gives John 2 apples"
+    s2 = u"Pooja sends 2 apples over to John"
+    
+    print(x.get_negative_transfer_arguments(s1))
+    print(x.get_negative_transfer_arguments(s2))
