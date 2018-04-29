@@ -21,7 +21,7 @@ class AlgebraNLP(object):
         q_int = w2n.word_to_num(str(quantifier.text))
         variable_name = nsubject_string + "_" + nobject_string
         
-        self.variables_list.append(variable_name)
+        self.add_to_variables_list(variable_name)
 
         return [variable_name, q_int]
 
@@ -39,7 +39,7 @@ class AlgebraNLP(object):
         q_int = w2n.word_to_num(str(quantifier.text))
         variable_name = nsubject_string + "_" + nobject_string
 
-        self.variables_list.append(variable_name)
+        self.add_to_variables_list(variable_name)
 
         return [variable_name, q_int]
 
@@ -57,8 +57,8 @@ class AlgebraNLP(object):
         q_int = w2n.word_to_num(str(quantifier.text))
         variable_name = nsubject_string + "_" + nobject_string
 
-        self.variables_list.append(variable_name)
-
+        self.add_to_variables_list(variable_name)        
+        
         return [variable_name, q_int]
 
     def get_negative_transfer_arguments(self, sentence):
@@ -77,8 +77,8 @@ class AlgebraNLP(object):
         q_int = w2n.word_to_num(str(quantifier.text))
         variable_name = nsubject_string + "_" + nobject_string
 
-        self.variables_list.append(variable_name)
-
+        self.add_to_variables_list(variable_name)
+        
         return [variable_name, q_int]
 
     def get_get_arguments(self, sentence):
@@ -96,8 +96,8 @@ class AlgebraNLP(object):
 
         variable_name = nsubject_string + "_" + nobject_string
 
-        self.variables_list.append(variable_name)
-
+        self.add_to_variables_list(variable_name)
+        
         return [variable_name]
 
     def reset_variables_list(self):
@@ -119,7 +119,7 @@ class AlgebraNLP(object):
                 dobj = c
                 mods += self._get_deps_strings(dobj,\
                                                 [], modifier_deps)
-        return "_".join([dobj.text] + mods)
+        return "_".join([dobj.lemma_.lower()] + [m.lemma_.lower() for m in mods])
 
     def _get_nsubject_string(self, V):
         """
@@ -136,7 +136,7 @@ class AlgebraNLP(object):
                 nsubj = c
                 mods += self._get_deps_strings(nsubj,\
                                                 [], modifier_deps)
-        return "_".join([nsubj.text] + mods)
+        return "_".join([nsubj.lemma_.lower()] + [m.lemma_.lower() for m in mods])
         
     def _get_quantifier(self, tokens):
         """
@@ -189,6 +189,10 @@ class AlgebraNLP(object):
             elif labels == sc.GET:
                 commands.append([sc.GET] + self.get_get_arguments(sentence))
         return commands
+
+    def add_to_variables_list(self, variable):
+        if variable not in self.variables_list:
+            self.variables_list.append(variable)
 
 if __name__=='__main__':
     # Test _get_deps_strings
