@@ -12,7 +12,12 @@ def is_quantifier(token):
     NOT SURE THIS METHOD IS NEEDED, HERE IN CASE WE NEED TO EXTEND
     TO THINGS THAT ARE NOT DIGITS.
     """
-    return token.like_num
+    QUANTIFIER_STRINGS = ["some", "many", "few", "much"]
+
+    if token.text in QUANTIFIER_STRINGS:
+        return True
+    else:
+        return token.like_num
 
 def get_parent_verb(token):
     """

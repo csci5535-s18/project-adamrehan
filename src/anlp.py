@@ -26,9 +26,9 @@ class AlgebraNLP(object):
         return [variable_name, q_int]
 
     def get_construct_arguments(self, sentence):
-        """                                                                                                                                          
-        We assume a sentence is a single meaningful chunk of text,                                                                                    
-        with coreference resolution already done in preprocessing                                                                                     
+        """ 
+        We assume a sentence is a single meaningful chunk of text,        
+        with coreference resolution already done in preprocessing
         """
         tokens = self.nlp(sentence)
         quantifier = self._get_quantifier(tokens)
@@ -44,16 +44,16 @@ class AlgebraNLP(object):
         return [variable_name, q_int]
 
     def get_destroy_arguments(self, sentence):
-        """                                                                                                                                           
-        We assume a sentence is a single meaningful chunk of text,                                                                                    
-        with coreference resolution already done in preprocessing                                                                                     
+        """
+        We assume a sentence is a single meaningful chunk of text,
+        with coreference resolution already done in preprocessing
         """
         tokens = self.nlp(sentence)
         quantifier = self._get_quantifier(tokens)
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)
         nobject_string = self._get_nobject_string(V)
-        # Store quantifier as an integer                                                                                                              
+        # Store quantifier as an integer
         q_int = w2n.word_to_num(str(quantifier.text))
         variable_name = nsubject_string + "_" + nobject_string
 
@@ -62,8 +62,8 @@ class AlgebraNLP(object):
         return [variable_name, q_int]
 
     def get_negative_transfer_arguments(self, sentence):
-        """                                                                                                                                           
-        We assume a sentence is a single meaningful chunk of text,                                                                                    
+        """
+        We assume a sentence is a single meaningful chunk of text,      
         with coreference resolution already done in preprocessing
 
         negative transfer example: Pooja gives one apple to John
@@ -73,13 +73,32 @@ class AlgebraNLP(object):
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)
         nobject_string = self._get_nobject_string(V)
-        # Store quantifier as an integer                                                                                                       
+        # Store quantifier as an integer
         q_int = w2n.word_to_num(str(quantifier.text))
         variable_name = nsubject_string + "_" + nobject_string
 
         self.variables_list.append(variable_name)
 
         return [variable_name, q_int]
+
+    def get_get_arguments(self, sentence):
+        """
+        We assume a sentence is a single meaningful chunk of text,
+        with coreference resolution already done in preprocessing
+        negative transfer example: Pooja gives one apple to John  
+        """
+        tokens = self.nlp(sentence)
+        quantifier = self._get_quantifier(tokens)
+        V = self._get_parent_verb(quantifier)
+        nsubject_string = self._get_nsubject_string(V)
+        nobject_string = self._get_nobject_string(V)
+        # Store quantifier as an integer
+
+        variable_name = nsubject_string + "_" + nobject_string
+
+        self.variables_list.append(variable_name)
+
+        return [variable_name]
 
     def reset_variables_list(self):
         self.variables_list = []
@@ -103,12 +122,11 @@ class AlgebraNLP(object):
         return "_".join([dobj.text] + mods)
 
     def _get_nsubject_string(self, V):
-        """                                                                                                                                           
-        Get the string that represents the part of the variable name                                                                                  
-        correspodning to the subject of the verb.                                                                                                     
-                                                                                                                                                      
-        modifier_deps will tell the _get_deps_strings method                                                                                          
-        which dependents to append to the string                                                                                                      
+        """
+        Get the string that represents the part of the variable name
+        correspodning to the subject of the verb.
+        modifier_deps will tell the _get_deps_strings method
+        which dependents to append to the string  
         """
         modifier_deps = ["amod", "nmod", "poss"]
         # For holding the strings that modify the dobj
@@ -129,7 +147,12 @@ class AlgebraNLP(object):
                 return token
 
     def _is_quantifier(self, token):
-        return token.like_num
+        QUANTIFIER_STRINGS = ["some", "many", "few", "much", "several", "every", "all"]
+
+        if token.text in QUANTIFIER_STRINGS:
+            return True
+        else:
+            return token.like_num
         
     def _get_parent_verb(self, token):
         """
@@ -146,7 +169,10 @@ class AlgebraNLP(object):
         
     def _get_deps_strings(self, token, deps_list=[], constraints=[]):
         for c in token.children:
-            if c.dep_ in constraints:
+            # Only return the strings that have deps in the constraints list
+            # We also NEVER want to return the quantifier
+            # Even when it serves as e.g. a modifier.
+            if c.dep_ in constraints and not self._is_quantifier(c):
                 deps_list.append(c.text)
                 self._get_deps_strings(c, deps_list, constraints)
 
@@ -165,6 +191,6 @@ class AlgebraNLP(object):
 if __name__=='__main__':
     # Test _get_deps_strings
     x = AlgebraNLP()
-    s = u"Pooja's Mom has 3 delicious green apples"
+    s = u"How many apples does Pooja have now?"
 
-    print(x.get_observation_arguments(s))
+    print(x.get_get_arguments(s))
