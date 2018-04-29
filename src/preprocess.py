@@ -9,4 +9,4 @@ def preprocess(anlp, text):
     :param text:
     :return:
     '''
-    return [u'Pooja has 3 apples', u'Pooja eats 1 apple', u'How many apples does Pooja have now?']
+    return [u'Pooja has 3 green apples', u'Pooja eats 1 green apple', u'How many green apples does Pooja have now?']
