@@ -24,6 +24,14 @@ class AlgebraNLP(object):
 
     def get_tokens(self, sentence):
         tokens = self.nlp(sentence)
+        sentence = []
+        
+        for t in tokens:
+            if t.pos_ == "PROPN":
+                sentence.append("she")
+            else:
+                sentence.append(t.text)
+        sentence = ' '.join(sentence)
         if self._use_stanford:
             updated_tokens = []
             # print 'creating dep parse'
@@ -122,6 +130,27 @@ class AlgebraNLP(object):
         for variable_name in variable_names:
             self.add_to_variables_list(variable_name)
         
+        return [variable_names[0], variable_names[1], q_int]
+
+    def get_positive_transfer_arguments(self, tokens):
+        """                                                                                                                                           
+        We assume a sentence is a single meaningful chunk of text,                                                                                    
+        with coreference resolution already done in preprocessing     
+        positive transfer example: Pooja takes one apple from John
+        """
+        quantifier = self._get_quantifier(tokens)
+        V = self._get_parent_verb(quantifier)
+        nsubject_string = self._get_nsubject_string(V)
+        dobject_string = self._get_dobject_string(V)
+        iobject_string = self._get_iobject_string(V)
+
+        # Store quantifier as an integer
+        q_int = w2n.word_to_num(str(quantifier.text))
+        variable_names = [nsubject_string + "_" + dobject_string, iobject_string + "_" + dobject_string]
+
+        for variable_name in variable_names:
+            self.add_to_variables_list(variable_name)
+
         return [variable_names[0], variable_names[1], q_int]
 
     def get_get_arguments(self, tokens):
@@ -267,6 +296,9 @@ class AlgebraNLP(object):
             elif label == sc.NTRANS:
                 commands.append([sc.NTRANS] +\
                             self.get_negative_transfer_arguments(tokens))
+            elif label == sc.PTRANS:
+                commands.append([sc.PTRANS] +\
+                            self.get_positive_transfer_arguments(tokens))
         return commands
 
     def add_to_variables_list(self, variable):
@@ -277,5 +309,11 @@ if __name__=='__main__':
     # Test _get_deps_strings
     # x = AlgebraNLP(use_stanford=False)
     x = AlgebraNLP(use_stanford=True)
-    s = u"Pooja gives John 1 green apple"
-    print x.get_commands([s], [sc.NTRANS])
+    s1 = u"Pooja has 3 apples"
+    s2 = u"Pooja eats one apple"
+    scons = u"Pooja gets one apple"
+    s3 = u"Pooja gives John 1 green apple"
+    s4 = u"Pooja takes one green apple from John"
+    s5 = u"How many green apples does Pooja have?"
+    s6 = u"John has 4 apples"
+    print x.get_commands([s1, s2, scons, s3, s4, s5, s6], [sc.OBSERVATION, sc.DESTROY, sc.CONS, sc.NTRANS, sc.PTRANS, sc.GET, sc.OBSERVATION])
