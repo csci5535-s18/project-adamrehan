@@ -9,6 +9,9 @@ PTRANS = 'p_transfer'
 GET = 'get'
 
 class VerbCategoryClassifier(object):
+    """
+    Classify a Verb Phrase according to the operations in imp
+    """
     def __init__(self, classnames=None, verbs=None):
         # self.classnames = classnames
         # self.n_components = len(classnames)

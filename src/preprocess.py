@@ -18,8 +18,10 @@ def preprocess(anlp, text):
     :param text:
     :return:
     '''
-    clusters = coref.one_shot_coref(utterances=u"She loves him.", context=u"My sister has a dog.")
+    clusters = coref.one_shot_coref(utterances=u"She eats one apples.", context=u"Pooja has 3 apples")
+    print(clusters)
     mentions = coref.get_mentions()
+    print(coref.get_utterances())
     print(mentions)
     return ['Pooja has 3 apples', 'Pooja eats 1 apple', 'How many apples does Pooja have now?']
 
