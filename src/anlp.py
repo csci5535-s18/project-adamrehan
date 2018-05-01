@@ -176,23 +176,31 @@ class AlgebraNLP(object):
         
         return [variable_name]
 
+    def classify_and_get_sentences(self, sentences):
+        commands = []
+        for sentence in sentences:
+            tokens = self.get_tokens(sentence)
+            label = self.classify(tokens)
+            commands.append(self.get_commands([sentence], [label])[0])
+            # co.append(self.classify(tokens))
+        return commands
+
     def classify(self, tokens):
         quantifier = self._get_quantifier(tokens)
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)
         dobject_string = self._get_dobject_string(V)
-        
-        if nsubject_string in self.variables_list\
-           or dobject_name in self.variables_list:
+        variable_name = '{}_{}'.format(nsubject_string, dobject_string)
+        if variable_name in self.variables_list:
             if "?" in [t.text for t in tokens]:
                 return sc.GET
             #If there is an indirect-object-like argument
             elif self._has_iobject(V):
-                return sc.verb_classifier.classify([sc.NTRANS, sc.PTRANS], V.text)
-            # Only two arguments means it is likely 
+                return self.verb_classifier.classify([sc.NTRANS, sc.PTRANS], V.text)
+            # Only two arguments means it is likely
             # a construct or destroy command
             else:
-                return sc.verb_classifier.classify([sc.CONS, sc.DESTROY], V.text)
+                return self.verb_classifier.classify([sc.CONS, sc.DESTROY], V.text)
         else:
             # If new variables are introduced,
             # we assume we have an observation type
@@ -293,7 +301,11 @@ class AlgebraNLP(object):
             for c in V.children:
                 if c.dep_ == "dobj":
                     iobj = [cp for cp in c.children\
-                            if cp.pos_ in ["PROPN", "NOUN"] and cp.dep_ == "compound"][0]
+                            if cp.pos_ in ["PROPN", "NOUN"] and cp.dep_ == "compound"]
+                    if len(iobj) != 0:
+                        iobj = iobj[0]
+                    else:
+                        iobj = None
 
         if iobj is not None:
             return True
@@ -342,7 +354,7 @@ class AlgebraNLP(object):
 
     def get_commands(self, sentences, labels):
         commands = []
-        self.variables_list = []
+        # self.variables_list = []
         for label, sentence in zip(labels, sentences):
             tokens = self.get_tokens(sentence)
             if label == sc.OBSERVATION:

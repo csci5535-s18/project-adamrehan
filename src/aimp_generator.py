@@ -2,7 +2,7 @@
 We would like to generate code for different languages from our intermediary language
 For example to Language A-IMP, or python etc
 '''
-from sentence_classifier import OBSERVATION, CONS, DESTROY, GET, PTRANS
+from sentence_classifier import OBSERVATION, CONS, DESTROY, GET, PTRANS, NTRANS
 def set(args):
     a = args[0]
     e = args[1]
@@ -20,11 +20,27 @@ def ptransfer(args):
     return seq(
         [set(
             [a1,
-             '{} + {}'.format(a1, e)
+             '{} + {}'.format(a1, construct([a1, e]))
              ]),
         set(
             [a2,
-             '{} - {}'.format(a2, e)
+             '{} - {}'.format(a2, destroy([a2, e]))
+             ])
+        ]
+    )
+
+def ntransfer(args):
+    a1 = args[0]
+    a2 = args[1]
+    e = args[2]
+    return seq(
+        [set(
+            [a1,
+             '{} + {}'.format(a1, destroy([a1, e]))
+             ]),
+        set(
+            [a2,
+             '{} - {}'.format(a2, construct([a2, e]))
              ])
         ]
     )
@@ -32,7 +48,7 @@ def ptransfer(args):
 def destroy(args):
     a = args[0]
     e = args[1]
-    return set([a, 'sub(get({a}); {e})'.format(a=a, e=e)])
+    return set([a, 'minus(get({a}); {e})'.format(a=a, e=e)])
 
 def construct(args):
     a = args[0]
@@ -53,8 +69,12 @@ def match(command):
         return set(args)
     elif c_type == PTRANS:
         return ptransfer(args)
+    elif c_type == NTRANS:
+        return ntransfer(args)
     elif c_type == DESTROY:
         return destroy(args)
+    elif c_type == CONS:
+        return construct(args)
     elif c_type == GET:
         return get(args)
     else:

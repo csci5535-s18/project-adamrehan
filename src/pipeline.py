@@ -8,10 +8,13 @@ anlp = AlgebraNLP(use_stanford=True)
 
 def prob2imp(text):
     sentences = preprocess(text, anlp)
-    labels = anlp.classifier.predict_labels(sentences)
-    commands = anlp.get_commands(sentences, labels)
-    print generate_aimp(commands)
+    commands = anlp.classify_and_get_sentences(sentences)
+    # commands = anlp.get_commands(sentences, labels)
+    return generate_aimp(commands)
 
 if __name__=='__main__':
-    prob = u'Pooja has three apples. She eats one. How many apples does Pooja have now?'
-    a_code = prob2imp(prob)
+    # prob = u'Pooja has three apples. She eats one apple. How many apples does Pooja have now?'
+    # print prob2imp(prob)
+    prob = u'Pooja has three apples. John has one apple. Pooja gives one apple to John. How many apples does Pooja have now?'
+    print prob2imp(prob)
+

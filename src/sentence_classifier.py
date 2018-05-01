@@ -29,8 +29,8 @@ class VerbClassifier():
         self.labeled_verbs = self._get_labeled_verbs_dict()
         #self.construct_embed = self.loadLabelEmbeds(CONSTRUCT_EMBEDDINGS_FILE)
         #self.destroy_embed = self.loadLabelEmbeds(DESTROY_EMBEDDINGS_FILE)
-        self.construct_matrix = self.loadLabelEmbeds(CONSTRUCT_MATRIX_FILE)
-        self.destroy_matrix = self.loadLabelEmbeds(DESTROY_MATRIX_FILE)
+        # self.construct_matrix = self.loadLabelEmbeds(CONSTRUCT_MATRIX_FILE)
+        # self.destroy_matrix = self.loadLabelEmbeds(DESTROY_MATRIX_FILE)
 
     def _get_labeled_verbs_dict(self):
         lines = [l.strip() for l in open(VERBSLIST1)]
