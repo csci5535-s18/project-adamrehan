@@ -5,6 +5,8 @@ import gensim
 EMBEDDINGS_FILE ="/home/adam/project-adamrehan/src/embeddings/GoogleNews-vectors-negative300.bin.gz"
 CONSTRUCT_EMBEDDINGS_FILE = "/home/adam/project-adamrehan/src/embeddings/construct_embedding.npy"
 DESTROY_EMBEDDINGS_FILE = "/home/adam/project-adamrehan/src/embeddings/destroy_embedding.npy"
+CONSTRUCT_MATRIX_FILE = "/home/adam/project-adamrehan/src/embeddings/construct_matrix.npy"
+DESTROY_MATRIX_FILE = "/home/adam/project-adamrehan/src/embeddings/destroy_matrix.npy"
 
 OBSERVATION = 'observation'
 CONS = 'construct'
@@ -17,8 +19,10 @@ class VerbClassifier():
     def __init__(self):
         # A matrix 
         self.W = self.loadWordEmbeds(EMBEDDINGS_FILE)
-        self.construct_embed = self.loadLabelEmbeds(CONSTRUCT_EMBEDDINGS_FILE)
-        self.destroy_embed = self.loadLabelEmbeds(DESTROY_EMBEDDINGS_FILE)
+        #self.construct_embed = self.loadLabelEmbeds(CONSTRUCT_EMBEDDINGS_FILE)
+        #self.destroy_embed = self.loadLabelEmbeds(DESTROY_EMBEDDINGS_FILE)
+        self.construct_matrix = self.loadLabelEmbeds(CONSTRUCT_MATRIX_FILE)
+        self.destroy_matrix = self.loadLabelEmbeds(DESTROY_MATRIX_FILE)
         
     def get_average_embedding(self, words):
         embeds = self.W[words]
@@ -27,9 +31,9 @@ class VerbClassifier():
 
     def get_label_embeds(self, label):
         if label in [CONS, PTRANS]:
-            return self.construct_embed
+            return self.construct_matrix
         elif label in [DESTROY, NTRANS]:
-            return self.destroy_embed
+            return self.destroy_matrix
         else:
             raise Exception("Unexpected labe %s" % label)
         
@@ -48,12 +52,19 @@ class VerbClassifier():
         embed = self.get_average_embedding(verb_phrase)
         similarity_dict = {l: 0.0 for l in labels}
         for l in labels:
-            similarity_dict[l] = self._cosine_sim(embed,\
-                                        self.get_label_embeds(l))
+            similarity_dict[l] = self._get_max_similarity(embed, l)
 
         # Return labels in order of how similar their embedding is to
         # the input verb phrase
         return sorted(similarity_dict, key=similarity_dict.get, reverse=True)
+    
+    def _get_max_similarity(self, embed, l):
+        sims = []
+        for class_embedding in self.get_label_embeds(l):
+            sims.append(self._cosine_sim(embed, class_embedding))
+
+        print(sims)
+        return max(sims)
 
     def _cosine_sim(self, w1, w2):
         """

@@ -48,13 +48,15 @@ for i, c in enumerate(construct_classes):
     construct_mat[i] = C[class2id[c]]
 
 # Get the average embedding of all 'destroy' classes
-destroy_embed = torch.sum(destroy_mat, 0) / destroy_mat.size(0)
-destroy_embed = destroy_embed.cpu().numpy()
+#destroy_embed = torch.sum(destroy_mat, 0) / destroy_mat.size(0)
+#destroy_embed = destroy_embed.cpu().numpy()
 
 # Get the average embedding of all 'constrict' classes
-construct_embed = torch.sum(construct_mat, 0) / construct_mat.size(0)
-construct_embed = construct_embed.cpu().numpy()
+#construct_embed = torch.sum(construct_mat, 0) / construct_mat.size(0)
+#construct_embed = construct_embed.cpu().numpy()
 
-np.save("../embeddings/destroy_embedding", destroy_embed)
-np.save("../embeddings/construct_embedding", construct_embed)
-np.save("../embeddings/class2id", class2id)
+destroy_mat = destroy_mat.cpu().numpy()
+construct_mat = construct_mat.cpu().numpy()
+
+np.save("../embeddings/destroy_matrix", destroy_mat)
+np.save("../embeddings/construct_matrix", construct_mat)
