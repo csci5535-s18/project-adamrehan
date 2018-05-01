@@ -15,6 +15,6 @@ def prob2imp(text):
 if __name__=='__main__':
     # prob = u'Pooja has three apples. She eats one apple. How many apples does Pooja have now?'
     # print prob2imp(prob)
-    prob = u'Pooja has three apples. John has one apple. Pooja gives one apple to John. How many apples does Pooja have now?'
+    prob = u'Pooja has three apples and John has one apple. She gives one apple to him. How many apples does she have now?'
     print prob2imp(prob)
 
