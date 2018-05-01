@@ -172,12 +172,13 @@ class AlgebraNLP(object):
 
         variable_name = nsubject_string + "_" + dobject_string
 
-        self.add_to_variables_list(variable_name)
+        # self.add_to_variables_list(variable_name)
         
         return [variable_name]
 
     def classify_and_get_sentences(self, sentences):
         commands = []
+        self.reset_variables_list()
         for sentence in sentences:
             tokens = self.get_tokens(sentence)
             label = self.classify(tokens)
