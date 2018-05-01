@@ -96,6 +96,9 @@ class VerbClassifier():
             return NTRANS if NTRANS in labels else DESTROY
         elif verb in self.labeled_verbs["c"]:
             return PTRANS if PTRANS in labels else CONS
+        else:
+            random.shuffle(labels)
+            return labels[0]
     
     def _get_max_similarity(self, embed, l):
         sims = []
