@@ -53,8 +53,7 @@ class VerbClassifier():
 
         # Return labels in order of how similar their embedding is to
         # the input verb phrase
-        print(similarity_dict)
-        return sorted(similarity_dict, key=similarity_dict.get)
+        return sorted(similarity_dict, key=similarity_dict.get, reverse=True)
 
     def _cosine_sim(self, w1, w2):
         """

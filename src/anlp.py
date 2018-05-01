@@ -3,6 +3,7 @@ from word2number import w2n
 import sentence_classifier as sc
 from stanfordcorenlp import StanfordCoreNLP
 from spacy.tokens.token import Token
+
 class AlgebraNLP(object):
     def __init__(self, use_stanford=False):
         self.nlp = spacy.load('en')
@@ -17,6 +18,7 @@ class AlgebraNLP(object):
         else:
             self._use_stanford = False
         self.variables_list = []
+        self.verb_classifier = sc.VerbClassifier()
 
     def __del__(self):
         if self._use_stanford:
@@ -171,6 +173,27 @@ class AlgebraNLP(object):
         
         return [variable_name]
 
+    def classify(self, tokens):
+        quantifier = self._get_quantifier(tokens)
+        V = self._get_parent_verb(quantifier)
+        nsubject_string = self._get_nsubject_string(V)
+        dobject_string = self._get_dobject_string(V)
+        if nsubject_string in self.variables_list\
+           or dobject_name in self.variables_list:
+            if "?" in [t.text for t in tokens]:
+                return sc.GET
+            #If there is an indirect-object-like argument
+            elif self._has_iobject(V):
+                return sc.verb_classifier.classify(([sc.NTRANS, sc.PTRANS]))[0]
+            # Only two arguments means it is likely 
+            # a construct or destroy command
+            else:
+                return sc.verb_classifier.classify(([sc.CONS, sc.DESTROY]))[0]
+        else:
+            # If new variables are introduced,
+            # we assume we have an observation type
+            return sc.OBSERVATION
+    
     def reset_variables_list(self):
         self.variables_list = []
 
@@ -241,6 +264,37 @@ class AlgebraNLP(object):
                             if cp.pos_ in ["PROPN", "NOUN"] and cp.dep_ == "compound"][0]
 
         return "_".join([iobj.lemma_.lower()] + [m.lower() for m in mods])
+
+    def _has_iobject(self, V):
+        modifier_deps = ["amod", "nmod", "poss"]
+        mods = []
+        iobj = None
+
+        for c in V.children:
+            print(c, c.dep_, c.pos_)
+            if c.dep_ in ["iobj", "nmod", "obl"]:
+                iobj = c
+
+                mods += self._get_deps_strings(iobj,\
+                                            [], modifier_deps)
+
+        if not iobj:
+            """                                                                                                                                       
+            We have observed an incorrect parse that stanford parser                                                                                  
+            produces when the direct object has adjectival modifiers                                                                                  
+            and the indirect object is a proper noun. This hack is                                                                                    
+            to counteract that scenario, in which the proper noun gets                                                                                
+            tacked onto the directo object as a compound                                                                                              
+            """
+            for c in V.children:
+                if c.dep_ == "dobj":
+                    iobj = [cp for cp in c.children\
+                            if cp.pos_ in ["PROPN", "NOUN"] and cp.dep_ == "compound"][0]
+
+        if iobj is not None:
+            return True
+        else:
+            return False
         
     def _get_quantifier(self, tokens):
         """
