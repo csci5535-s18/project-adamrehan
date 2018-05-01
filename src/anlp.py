@@ -172,7 +172,7 @@ class AlgebraNLP(object):
 
         variable_name = nsubject_string + "_" + dobject_string
 
-        self.add_to_variables_list(variable_name)
+        # self.add_to_variables_list(variable_name)
         
         return [variable_name]
 
