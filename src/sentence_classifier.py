@@ -29,8 +29,8 @@ class VerbClassifier():
         self.labeled_verbs = self._get_labeled_verbs_dict()
         #self.construct_embed = self.loadLabelEmbeds(CONSTRUCT_EMBEDDINGS_FILE)
         #self.destroy_embed = self.loadLabelEmbeds(DESTROY_EMBEDDINGS_FILE)
-        self.construct_matrix = self.loadLabelEmbeds(CONSTRUCT_MATRIX_FILE)
-        self.destroy_matrix = self.loadLabelEmbeds(DESTROY_MATRIX_FILE)
+        # self.construct_matrix = self.loadLabelEmbeds(CONSTRUCT_MATRIX_FILE)
+        # self.destroy_matrix = self.loadLabelEmbeds(DESTROY_MATRIX_FILE)
 
     def _get_labeled_verbs_dict(self):
         lines = [l.strip() for l in open(VERBSLIST1)]
@@ -92,7 +92,7 @@ class VerbClassifier():
         # Return labels in order of how similar their embedding is to
         # the input verb phrase
         #return sorted(similarity_dict, key=similarity_dict.get, reverse=True)
-        if verb in self.labeled_verbs["d"]:
+        if verb in self.labeled_verbs["d"] + ["gives"]:
             return NTRANS if NTRANS in labels else DESTROY
         elif verb in self.labeled_verbs["c"]:
             return PTRANS if PTRANS in labels else CONS
