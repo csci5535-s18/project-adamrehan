@@ -4,11 +4,11 @@ from preprocess import preprocess
 import sentence_classifier
 
 anlp = AlgebraNLP(use_stanford=True)
-classifier = sentence_classifier.load('verbs.clf')
+#classifier = sentence_classifier.load('verbs.clf')
 
 def prob2imp(text):
-    sentences = preprocess(anlp, text)
-    labels = classifier.predict_labels(sentences)
+    sentences = preprocess(text, anlp)
+    labels = anlp.classifier.predict_labels(sentences)
     commands = anlp.get_commands(sentences, labels)
     print generate_aimp(commands)
 

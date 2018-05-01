@@ -181,17 +181,18 @@ class AlgebraNLP(object):
         V = self._get_parent_verb(quantifier)
         nsubject_string = self._get_nsubject_string(V)
         dobject_string = self._get_dobject_string(V)
+        
         if nsubject_string in self.variables_list\
            or dobject_name in self.variables_list:
             if "?" in [t.text for t in tokens]:
                 return sc.GET
             #If there is an indirect-object-like argument
             elif self._has_iobject(V):
-                return sc.verb_classifier.classify(([sc.NTRANS, sc.PTRANS]))[0]
+                return sc.verb_classifier.classify([sc.NTRANS, sc.PTRANS], V.text)
             # Only two arguments means it is likely 
             # a construct or destroy command
             else:
-                return sc.verb_classifier.classify(([sc.CONS, sc.DESTROY]))[0]
+                return sc.verb_classifier.classify([sc.CONS, sc.DESTROY], V.text)
         else:
             # If new variables are introduced,
             # we assume we have an observation type
