@@ -92,10 +92,13 @@ class VerbClassifier():
         # Return labels in order of how similar their embedding is to
         # the input verb phrase
         #return sorted(similarity_dict, key=similarity_dict.get, reverse=True)
-        if verb in self.labeled_verbs["d"]:
+        if verb in self.labeled_verbs["d"] + ["gives"]:
             return NTRANS if NTRANS in labels else DESTROY
         elif verb in self.labeled_verbs["c"]:
             return PTRANS if PTRANS in labels else CONS
+        else:
+            random.shuffle(labels)
+            return labels[0]
     
     def _get_max_similarity(self, embed, l):
         sims = []
