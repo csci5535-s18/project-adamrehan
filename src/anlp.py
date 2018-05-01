@@ -8,7 +8,7 @@ class AlgebraNLP(object):
         self.nlp = spacy.load('en')
         if use_stanford:
             print 'creating core server'
-            self.snlp = StanfordCoreNLP(r'../stanford-corenlp-full-2018-02-27')
+            self.snlp = StanfordCoreNLP(r'http://localhost', port=9000)
             print 'done creating core server'
             print 'initializing dep parse'
             self.snlp.dependency_parse(u'test')
@@ -26,9 +26,12 @@ class AlgebraNLP(object):
         tokens = self.nlp(sentence)
         sentence = []
         
-        for t in tokens:
+        for i, t in enumerate(tokens):
             if t.pos_ == "PROPN":
-                sentence.append("she")
+                if i == 0:
+                    sentence.append("she")
+                else:
+                    sentence.append("me")
             else:
                 sentence.append(t.text)
         sentence = ' '.join(sentence)
@@ -313,7 +316,7 @@ if __name__=='__main__':
     s2 = u"Pooja eats one apple"
     scons = u"Pooja gets one apple"
     s3 = u"Pooja gives John 1 green apple"
-    s4 = u"Pooja takes one green apple from John"
+    s4 = u"Pooja takes 5 green apple from John"
     s5 = u"How many green apples does Pooja have?"
     s6 = u"John has 4 apples"
     print x.get_commands([s1, s2, scons, s3, s4, s5, s6], [sc.OBSERVATION, sc.DESTROY, sc.CONS, sc.NTRANS, sc.PTRANS, sc.GET, sc.OBSERVATION])
