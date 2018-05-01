@@ -17,33 +17,13 @@ def ptransfer(args):
     a1 = args[0]
     a2 = args[1]
     e = args[2]
-    return seq(
-        [set(
-            [a1,
-             '{} + {}'.format(a1, construct([a1, e]))
-             ]),
-        set(
-            [a2,
-             '{} - {}'.format(a2, destroy([a2, e]))
-             ])
-        ]
-    )
+    return seq([construct([a1, e]), destroy([a2, e])])
 
 def ntransfer(args):
     a1 = args[0]
     a2 = args[1]
     e = args[2]
-    return seq(
-        [set(
-            [a1,
-             '{} + {}'.format(a1, destroy([a1, e]))
-             ]),
-        set(
-            [a2,
-             '{} - {}'.format(a2, construct([a2, e]))
-             ])
-        ]
-    )
+    return seq([destroy([a1, e]), construct([a2, e])])
 
 def destroy(args):
     a = args[0]
