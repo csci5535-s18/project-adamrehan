@@ -178,6 +178,7 @@ class AlgebraNLP(object):
 
     def classify_and_get_sentences(self, sentences):
         commands = []
+        self.reset_variables_list()
         for sentence in sentences:
             tokens = self.get_tokens(sentence)
             label = self.classify(tokens)
@@ -191,11 +192,12 @@ class AlgebraNLP(object):
         nsubject_string = self._get_nsubject_string(V)
         dobject_string = self._get_dobject_string(V)
         variable_name = '{}_{}'.format(nsubject_string, dobject_string)
+
+        if "?" in [t.text for t in tokens]:
+            return sc.GET
         if variable_name in self.variables_list:
-            if "?" in [t.text for t in tokens]:
-                return sc.GET
             #If there is an indirect-object-like argument
-            elif self._has_iobject(V):
+            if self._has_iobject(V):
                 return self.verb_classifier.classify([sc.NTRANS, sc.PTRANS], V.text)
             # Only two arguments means it is likely
             # a construct or destroy command
@@ -255,7 +257,6 @@ class AlgebraNLP(object):
         iobj = None
         
         for c in V.children:
-            print(c, c.dep_, c.pos_)
             if c.dep_ in ["iobj", "nmod", "obl"]:
                 iobj = c
                     
@@ -283,7 +284,6 @@ class AlgebraNLP(object):
         iobj = None
 
         for c in V.children:
-            print(c, c.dep_, c.pos_)
             if c.dep_ in ["iobj", "nmod", "obl"]:
                 iobj = c
 
@@ -321,7 +321,7 @@ class AlgebraNLP(object):
                 return token
 
     def _is_quantifier(self, token):
-        QUANTIFIER_STRINGS = ["some", "many", "few", "much", "several", "every", "all"]
+        QUANTIFIER_STRINGS = ["some", "many", "few", "much", "several", "every", "all", "any"]
 
         if token.text in QUANTIFIER_STRINGS:
             return True

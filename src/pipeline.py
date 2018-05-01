@@ -17,4 +17,5 @@ if __name__=='__main__':
     # print prob2imp(prob)
     prob = u'Pooja has three apples and John has one apple. She gives one apple to him. How many apples does she have now?'
     print prob2imp(prob)
-
+    prob = u'Pooja has three apples and John has one apple. Does he have any Oranges?'
+    print prob2imp(prob)
