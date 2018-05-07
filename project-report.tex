@@ -8,6 +8,8 @@
 \usepackage{amsmath}
 \usepackage{mathpartir} %% for inference rules
 \usepackage{import}
+\usepackage{dsfont}
+
 \newcommand*{\sectiondir}{sections/}
 \usepackage[round]{natbib}
 \usepackage{graphicx}
@@ -27,10 +29,21 @@
   {\lstset{language=[Objective]Caml}}
   {}
 
-\title{Final Project Checkpoint\\Formalized Algebra from Text}
+\title{From Algebraic Word Problem to Program: \\ A Formalized Approach}
+
+\date{}
 
 \author{Adam Wiemerslage and Rehan Ahmed}
 
+\author{
+  Wiemerslage, Adam\\
+  University of Colorado, Boulder\\
+  \texttt{adam.wiemerslage@colorado.edu}
+  \and
+  Ahmed, Shafiuddin Rehan\\
+  University of Colorado, Boulder\\
+  \texttt{shafiuddin.ahmed@colorado.edu}\\
+}
 %% Number questions by section
 \renewcommand{\thequestion}{\thesection.\arabic{question}}
 
@@ -38,6 +51,10 @@
 \newcolumntype{C}{>{$}c<{$}}
 \newcolumntype{L}{>{$}l<{$}}
 \newcolumntype{R}{>{$}r<{$}}
+
+
+\newcommand{\norm}[1]{\lvert #1 \rvert}
+\newcommand{\ltwonorm}[1]{\lvert \lvert #1 \rvert \rvert}
 
 \newcommand{\fmtkw}[1]{\mathtt{#1}}
 
@@ -73,6 +90,13 @@
 \newcommand{\ora}[2]{\ensuremath{\fmtkw{or}(#1; #2)}}
 \newcommand{\orc}[2]{\ensuremath{#1 \mathbin{\fmtkw{||}} #2}}
 
+\newcommand{\observationa}[2]{\ensuremath{\fmtkw{observation}(#1; #2)}}
+\newcommand{\constructa}[2]{\ensuremath{\fmtkw{construct}(#1; #2)}}
+\newcommand{\destroya}[2]{\ensuremath{\fmtkw{destroy}(#1; #2)}}
+\newcommand{\ptransfera}[3]{\ensuremath{\fmtkw{ptransfer}(#1; #2; #3)}}
+\newcommand{\ntransfera}[3]{\ensuremath{\fmtkw{ntransfer}(#1; #2; #3)}}
+\newcommand{\geta}[1]{\ensuremath{\fmtkw{get}(#1)}}
+
 \newcommand{\Cmd}{\ensuremath{\mathsf{Cmd}}}
 \newcommand{\cmd}{\ensuremath{\mathit{c}}}
 \newcommand{\skipa}{\ensuremath{\fmtkw{skip}}}
@@ -84,8 +108,8 @@
 \newcommand{\ifc}[3]{\ensuremath{\fmtkw{if}\;#1\;\fmtkw{then}\;#2\;\fmtkw{else}\;#3}}
 \newcommand{\whilea}[2]{\ensuremath{\fmtkw{while}(#1; #2)}}
 \newcommand{\whilec}[2]{\ensuremath{\fmtkw{while}\;#1\;\fmtkw{do}\;#2}}
-\newcommand{\printa}[1]{\ensuremath{\fmtkw{print}(#1)}}
-\newcommand{\printc}[1]{\ensuremath{\fmtkw{print}\; #1}}
+\newcommand{\printa}[1]{\ensuremath{\fmtkw{get}(#1)}}
+\newcommand{\printc}[1]{\ensuremath{\fmtkw{get}\; #1}}
 
 
 \newcommand{\Addr}{\ensuremath{\mathsf{Addr}}}
@@ -94,7 +118,7 @@
 \newcommand{\storelet}[2]{\ensuremath{#1 \hookrightarrow #2}}
 \newcommand{\xstore}[3]{#1, \storelet{#2}{#3}}
 
-\newcommand{\IMP}{\textbf{\textsf{IMP-1}}\xspace}
+\newcommand{\IMP}{\textbf{\textsf{A-IMP}}\xspace}
 
 \newcommand{\E}{\textbf{\textsf{E}}\xspace}
 \newcommand{\T}{\textbf{\textsf{T}}\xspace}
@@ -114,8 +138,8 @@
 \newcommand{\stepspap}[3][\typ]{\ensuremath{#2 \hookrightarrow_{:#1} #3}}
 \newcommand{\isVal}[1]{\ensuremath{#1\;\mathsf{val}}}
 \newcommand{\isFinal}[1]{\ensuremath{#1\;\mathsf{final}}}
-\newcommand{\isFloat}[1]{\ensuremath{#1 : \mathsf{float}}}
-\newcommand{\floata}[1]{\ensuremath{\mathsf{float [#1]}}}
+\newcommand{\isFloat}[1]{\ensuremath{#1 : \mathsf{num}}}
+\newcommand{\floata}[1]{\ensuremath{\mathsf{num [#1]}}}
 
 \newcommand{\even}{\operatorname{even}}
 \newtheorem{problem}{Example}
@@ -124,10 +148,13 @@
 \maketitle
 
 \import{\sectiondir}{abstract.tex}
+\import{\sectiondir}{intro.tex}
+\import{\sectiondir}{previous.tex}
+\import{\sectiondir}{method.tex}
+\import{\sectiondir}{nlp.tex}
 \import{\sectiondir}{architecture.tex}
-\import{\sectiondir}{example.tex}
-\import{\sectiondir}{language.tex}
-
+\import{\sectiondir}{conclusion.tex}
+% \import{\sectiondir}{example.tex}
 \newpage
 \bibliographystyle{plainnat}
 \bibliography{bibfile}
